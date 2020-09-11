@@ -1,0 +1,185 @@
+<?xml version="1.0"?>
+<!-- Revolute-Revolute Manipulator -->
+<robot name="sss" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:include filename="$(find rrbot_description)/urdf/sss.gazebo" />
+  <xacro:property name="mass" value="1" /> <!-- arbitrary value for mass -->
+  <xacro:property name="camera_link" value="0.01" /> <!-- Size of square 'camera' box -->
+
+
+  <!-- Used for fixing robot to Gazebo 'base_link' -->
+
+
+
+  <link name = "base_link">
+      <pose frame=''>0 0 2 0 -0 0</pose>
+
+     <visual name="visual">
+    <origin xyz="0 0 3" rpy="0 0 0"/>
+      <geometry>
+	<mesh filename="$(find sss_simulation)/meshes/sss_FINAL2_orgin.dae"/>
+      </geometry>
+    </visual>
+    <collision name="collision">
+    <origin xyz="0 0 3" rpy="0 0 0"/>
+      <geometry>
+	<mesh filename="$(find sss_simulation)/meshes/sss_FINAL2_orgin.dae"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="1e-5" />
+      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+    </inertial>
+
+  </link>
+
+  <joint name="left_camera_joint" type="revolute">
+    <parent link="base_link"/>
+    <child link="left_camera_link"/>
+    <origin xyz="-0.35 -0.35 3" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="300" velocity="0.1" lower="${-pi/2}" upper="${pi/2}"/>
+    <!--dynamics damping="50" friction="1"/-->
+  </joint>
+
+  <link name = "left_camera_link">
+    <visual name="visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="$(find sss_simulation)/meshes/camera_cylinder.dae"/>
+      </geometry>     
+    </visual>
+
+
+  </link>
+    <joint name="right_camera_joint" type="revolute">
+    <parent link="base_link"/>
+    <child link="right_camera_link"/>
+    <origin xyz="0.35 -0.35 3" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="300" velocity="0.1" lower="-3.14" upper="3.14"/>
+    <!--dynamics damping="50" friction="1"/-->
+  </joint>
+
+  <link name = "right_camera_link">
+    <visual name="visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="$(find sss_simulation)/meshes/camera_cylinder.dae"/>
+      </geometry>     
+    </visual>
+  </link>
+
+  <joint name="camera_joint" type="fixed">
+    <axis xyz="0 0 -1" />
+    <origin xyz="0 0 -0.11" rpy="${pi} 0 ${2*pi/2}"/>
+    <parent link="left_camera_link"/>
+    <child link="cameraplugin1_link"/>
+  </joint>
+
+  <!-- Camera -->
+  <link name="cameraplugin1_link">
+    <collision>
+	    <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+	<box size="${camera_link} ${camera_link} ${camera_link}"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+	<box size="${camera_link} ${camera_link} ${camera_link}"/>
+      </geometry>
+      <material name="yellow"/> <!--https://github.com/ros-controls/ros_control/wiki/hardware_interface-->
+    </visual>
+
+    <inertial>
+      <mass value="1e-5" />
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+    </inertial>
+  </link>
+
+
+  <joint name="camera_joint2" type="fixed">
+    <axis xyz="0 0 -1" />
+    <origin xyz="0 0 -0.11" rpy="${pi} ${pi/2} ${3*pi/2}"/>
+    <parent link="right_camera_link"/>
+    <child link="cameraplugin2_link"/>
+  </joint>
+
+  <!-- Camera -->
+  <link name="cameraplugin2_link">
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+	<box size="${camera_link} ${camera_link} ${camera_link}"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+	<box size="${camera_link} ${camera_link} ${camera_link}"/>
+      </geometry>
+      <material name="yellow"/>
+    </visual>
+
+    <inertial>
+      <mass value="1e-5" />
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+    </inertial>
+  </link>
+
+<!--stereo-->
+
+
+  <joint name="camera_joint_stereo" type="fixed">
+    <axis xyz="0 0 -1" />
+    <origin xyz="-0.35 0.35 2.89" rpy="${pi} ${pi/2} ${3*pi/2}"/>
+    <parent link="base_link"/>
+    <child link="cameraplugin3_link"/>
+  </joint>
+
+  <!-- Camera -->
+  <link name="cameraplugin3_link">
+
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+	<box size="${camera_link} ${camera_link} ${camera_link}"/>
+      </geometry>
+      <material name="yellow"/><!--https://github.com/ros-controls/ros_control/wiki/hardware_interface-->
+    </visual>
+
+  </link>
+
+
+<!--motion-->
+
+  <transmission name="tran1">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="left_camera_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor1">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="tran2">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="right_camera_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor2">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+
+</robot>

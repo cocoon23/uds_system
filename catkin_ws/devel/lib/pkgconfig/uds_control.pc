@@ -1,0 +1,8 @@
+prefix=/home/meungsuklee/catkin_ws/devel
+
+Name: uds_control
+Description: Description of uds_control
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

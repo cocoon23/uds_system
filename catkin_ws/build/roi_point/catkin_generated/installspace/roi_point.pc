@@ -1,0 +1,8 @@
+prefix=/home/meungsuklee/catkin_ws/install
+
+Name: roi_point
+Description: Description of roi_point
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

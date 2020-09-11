@@ -1,0 +1,8 @@
+prefix=/home/meungsuklee/catkin_ws/install
+
+Name: uds_description
+Description: Description of uds_description
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

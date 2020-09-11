@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!-- Revolute-Revolute Manipulator -->
+<robot name="traffic_cone" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Constants for robot dimensions -->
+  <xacro:property name="PI" value="3.1415926535897931"/>
+
+  <!-- Import all Gazebo-customization elements, including Gazebo colors -->
+
+  <xacro:include filename="$(find sss_simulation)/urdf/materials.xacro" />
+
+
+    <xacro:macro name="inertial_matrix" params="mass">
+               <inertial>
+                       <mass value="${mass}" />
+                       <inertia ixx="1." ixy="0.0" ixz="0.0"
+                                iyy="1." iyz="0.0"
+                                izz="1." />
+               </inertial>
+    </xacro:macro>
+
+
+
+
+  <!-- Base Link -->
+  <link name="traffic_cone">
+    <visual name="visual">
+      <origin xyz="1.5 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="$(find sss_simulation)/meshes/brick.dae" scale="5 10 20"/>
+      </geometry>     
+    </visual>
+    <collision name="collision">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+	<mesh filename="$(find sss_simulation)/meshes/brick.dae"  scale="5 10 20"/>
+	<scale>0.01 0.01 0.01</scale>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="1e-5" />
+      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+    </inertial>
+</link>
+
+</robot>

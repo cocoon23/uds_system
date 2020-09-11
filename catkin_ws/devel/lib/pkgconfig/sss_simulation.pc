@@ -1,0 +1,8 @@
+prefix=/home/meungsuklee/catkin_ws/devel
+
+Name: sss_simulation
+Description: Description of sss_simulation
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
